@@ -57,19 +57,24 @@ const booksSchema = new Schema<BookintanceDocument>(
 
 /* Instance method for change the books Availability */
 booksSchema.methods.setAvailability = async function () {
-  if (this.copies < 1 && this.available === true) {
+  if (this.copies <= 0 && this.available === true) {
     this.available = false;
+    await this.save();
+  } else if (this.copies > 0 && this.available === false) {
+    this.available = true;
     await this.save();
   }
 };
-/* middleware for change the availabe value flase to true */
+/* middleware for change the availabe value flase to true vice verse */
 booksSchema.pre("save", function (next) {
-  if (this.copies > 0 && this.available === false) {
+  if (this.copies <= 0) {
+    this.available = false;
+  } else {
     this.available = true;
-     this.save();
   }
   next();
 });
+;
 
 
 export const Books = model<BookintanceDocument>("Books", booksSchema);

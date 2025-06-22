@@ -110,7 +110,13 @@ booksRoutes.put("/books/:bookId", async (req: Request, res: Response) => {
     const bookId = req.params.bookId;
 
     const body = req.body;
-
+  
+    if(body.copies < 0){
+      res.status(400).json({
+        success:false,
+        message:"copies must be positive number"
+      })
+    }
     const updatedBook = await Books.findByIdAndUpdate(bookId, body, {
       new: true,
     });

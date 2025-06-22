@@ -59,18 +59,25 @@ const booksSchema = new mongoose_1.Schema({
 /* Instance method for change the books Availability */
 booksSchema.methods.setAvailability = function () {
     return __awaiter(this, void 0, void 0, function* () {
-        if (this.copies < 1 && this.available === true) {
+        if (this.copies <= 0 && this.available === true) {
             this.available = false;
+            yield this.save();
+        }
+        else if (this.copies > 0 && this.available === false) {
+            this.available = true;
             yield this.save();
         }
     });
 };
-/* middleware for change the availabe value flase to true */
+/* middleware for change the availabe value flase to true vice verse */
 booksSchema.pre("save", function (next) {
-    if (this.copies > 0 && this.available === false) {
+    if (this.copies <= 0) {
+        this.available = false;
+    }
+    else {
         this.available = true;
-        this.save();
     }
     next();
 });
+;
 exports.Books = (0, mongoose_1.model)("Books", booksSchema);

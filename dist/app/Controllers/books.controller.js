@@ -118,6 +118,12 @@ exports.booksRoutes.put("/books/:bookId", (req, res) => __awaiter(void 0, void 0
     try {
         const bookId = req.params.bookId;
         const body = req.body;
+        if (body.copies < 0) {
+            res.status(400).json({
+                success: false,
+                message: "copies must be positive number"
+            });
+        }
         const updatedBook = yield books_model_1.Books.findByIdAndUpdate(bookId, body, {
             new: true,
         });
