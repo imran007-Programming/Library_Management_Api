@@ -43,6 +43,7 @@ limit (number) - Limit number of results
 
 Example Response:
 
+````json
 {
 "success": true,
 "message": "Books retrieved successfully",
@@ -68,7 +69,7 @@ Example Response:
 in this a post method can add a book in the database with all books details like title,author,genre,isbn,description,copies,available.
 
 and response will look like this
-
+```json
 {
 "title": "The everythings we know",
 "author": "Stephen Hawking",
@@ -79,3 +80,5 @@ and response will look like this
 "available": true
 
 }
+
+
