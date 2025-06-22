@@ -43,26 +43,29 @@ limit (number) - Limit number of results
 
 Example Response:
 
-````json
+```json
+
 {
-"success": true,
-"message": "Books retrieved successfully",
-"data": [
-{
-"_id": "685463dc614f8cf930a7cb1e",
-"title": "The Life of Marie Curie",
-"author": "Clara Davis",
-"genre": "BIOGRAPHY",
-"isbn": "9780553380167",
-"description": "A look at the extraordinary life of the Nobel-winning scientist.",
-"copies": 2,
-"available": true,
-"createdAt": "2025-06-19T19:24:12.539Z",
-"updatedAt": "2025-06-21T20:39:06.373Z"
-},
-...
-]
+  "success": true,
+  "message": "Books retrieved successfully",
+  "data": [
+    {
+      "_id": "685463dc614f8cf930a7cb1e",
+      "title": "The Life of Marie Curie",
+      "author": "Clara Davis",
+      "genre": "BIOGRAPHY",
+      "isbn": "9780553380167",
+      "description": "A look at the extraordinary life of the Nobel-winning scientist.",
+      "copies": 2,
+      "available": true,
+      "createdAt": "2025-06-19T19:24:12.539Z",
+      "updatedAt": "2025-06-21T20:39:06.373Z"
+    },
+    ...
+  ]
 }
+```
+
 
 ### POST (/api/books)
 
@@ -80,5 +83,5 @@ and response will look like this
 "available": true
 
 }
-
+```
 
