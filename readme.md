@@ -195,7 +195,7 @@ Rsponse will be:
 
 ```
 
-And if the book copies is getting value 0 then its available will be false fro true,
+And if the book copies is getting value 0 then its available will be false from true,
 
 ```json
 {
