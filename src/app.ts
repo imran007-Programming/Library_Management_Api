@@ -8,7 +8,7 @@ app.use(express.json());
 app.use("/api", booksRoutes);
 
 app.get("/", (req: Request, res: Response) => {
-  res.json({
+  res.send({
     message: "this is library management api",
   });
 });

@@ -16,7 +16,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const app_1 = __importDefault(require("./app"));
 let server;
 const PORT = 4000;
-const uri = "mongodb+srv://mongodb:mongodb@cluster0.v9pyuxs.mongodb.net/booksStore?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.MONGODB_URI;
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield mongoose_1.default.connect(uri);
