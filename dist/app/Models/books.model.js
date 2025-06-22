@@ -14,19 +14,19 @@ const mongoose_1 = require("mongoose");
 const booksSchema = new mongoose_1.Schema({
     title: {
         type: String,
-        required: true,
+        required: [true, "Title is required"],
     },
     author: {
         type: String,
-        required: true,
+        required: [true, "author name is required"],
     },
     genre: {
         type: String,
-        required: true,
+        required: [true, "genre is required"],
     },
     isbn: {
         type: String,
-        required: true,
+        required: [true, "isbn number is required"],
         unique: true,
     },
     description: {
@@ -63,10 +63,14 @@ booksSchema.methods.setAvailability = function () {
             this.available = false;
             yield this.save();
         }
-        else if (this.copies > 0 && this.available === false) {
-            this.available = true;
-            yield this.save();
-        }
     });
 };
+/* middleware for change the availabe value flase to true */
+booksSchema.pre("save", function (next) {
+    if (this.copies > 0 && this.available === false) {
+        this.available = true;
+        this.save();
+    }
+    next();
+});
 exports.Books = (0, mongoose_1.model)("Books", booksSchema);

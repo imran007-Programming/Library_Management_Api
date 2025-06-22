@@ -9,19 +9,19 @@ const booksSchema = new Schema<BookintanceDocument>(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "Title is required"],
     },
     author: {
       type: String,
-      required: true,
+      required: [true, "author name is required"],
     },
     genre: {
       type: String,
-      required: true,
+      required: [true, "genre is required"],
     },
     isbn: {
       type: String,
-      required: true,
+      required: [true, "isbn number is required"],
       unique: true,
     },
     description: {
@@ -60,10 +60,16 @@ booksSchema.methods.setAvailability = async function () {
   if (this.copies < 1 && this.available === true) {
     this.available = false;
     await this.save();
-  } else if (this.copies > 0 && this.available === false) {
-    this.available = true;
-    await this.save();
   }
 };
+/* middleware for change the availabe value flase to true */
+booksSchema.pre("save", function (next) {
+  if (this.copies > 0 && this.available === false) {
+    this.available = true;
+     this.save();
+  }
+  next();
+});
+
 
 export const Books = model<BookintanceDocument>("Books", booksSchema);

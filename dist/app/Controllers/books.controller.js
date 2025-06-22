@@ -16,12 +16,24 @@ exports.booksRoutes = void 0;
 const express_1 = __importDefault(require("express"));
 const books_model_1 = require("../Models/books.model");
 const borrow_model_1 = require("../Models/borrow.model");
+const zod_1 = require("zod");
 exports.booksRoutes = express_1.default.Router();
+/* zod validation for create a book */
+const createBooksZodSchema = zod_1.z.object({
+    title: zod_1.z.string(),
+    author: zod_1.z.string(),
+    isbn: zod_1.z.string(),
+    genre: zod_1.z.string(),
+    description: zod_1.z.string().optional(),
+    copies: zod_1.z.number(),
+    available: zod_1.z.boolean()
+});
 /* Create a New Book */
 exports.booksRoutes.post("/books", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
-        const books = yield books_model_1.Books.create(body);
+        const zodvalidation = yield createBooksZodSchema.parseAsync(body);
+        const books = yield books_model_1.Books.create(zodvalidation);
         res.status(201).json({
             success: true,
             message: "Books created successfully",
@@ -40,7 +52,7 @@ exports.booksRoutes.post("/books", (req, res) => __awaiter(void 0, void 0, void 
             res.status(500).json({
                 message: "Something went wrong",
                 success: false,
-                error: error.message || error,
+                error: error.errors,
             });
         }
     }
@@ -81,6 +93,12 @@ exports.booksRoutes.get("/books/:bookId", (req, res) => __awaiter(void 0, void 0
     try {
         const bookId = req.params.bookId;
         const getbookById = yield books_model_1.Books.findById(bookId);
+        if (!getbookById) {
+            res.status(404).json({
+                success: false,
+                message: "book doesn't exist"
+            });
+        }
         res.status(200).json({
             success: true,
             message: "Book retrieved successfully",

@@ -1,13 +1,29 @@
 import express, { Request, Response } from "express";
 import { Books } from "../Models/books.model";
 import { BorrowBookslist } from "../Models/borrow.model";
+import { z } from "zod";
 export const booksRoutes = express.Router();
+
+
+/* zod validation for create a book */
+
+const createBooksZodSchema = z.object({
+  title: z.string(),
+  author: z.string(),
+  isbn: z.string(),
+  genre: z.string(),
+  description: z.string().optional(),
+  copies: z.number(),
+  available:z.boolean()
+});
+
 
 /* Create a New Book */
 booksRoutes.post("/books", async (req: Request, res: Response) => {
   try {
     const body = req.body;
-    const books = await Books.create(body);
+    const zodvalidation = await createBooksZodSchema.parseAsync(body)
+    const books = await Books.create(zodvalidation);
     res.status(201).json({
       success: true,
       message: "Books created successfully",
@@ -24,7 +40,7 @@ booksRoutes.post("/books", async (req: Request, res: Response) => {
       res.status(500).json({
         message: "Something went wrong",
         success: false,
-        error: error.message || error,
+        error: error.errors,
       });
     }
   }
@@ -68,6 +84,12 @@ booksRoutes.get("/books/:bookId", async (req: Request, res: Response) => {
   try {
     const bookId = req.params.bookId;
     const getbookById = await Books.findById(bookId);
+    if(!getbookById){
+      res.status(404).json({
+        success:false,
+        message:"book doesn't exist"
+      })
+    }
     res.status(200).json({
       success: true,
       message: "Book retrieved successfully",
