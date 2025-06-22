@@ -43,7 +43,7 @@ limit (number) - Limit number of results
 
 Example Response:
 
-````bash
+````json
 {
 "success": true,
 "message": "Books retrieved successfully",
@@ -73,7 +73,8 @@ in this a post method can add a book in the database with all books details like
 
 and response will look like this
 
-```bash
+
+```json
 {
   "title": "The everythings we know",
   "author": "Stephen Hawking",
@@ -83,4 +84,6 @@ and response will look like this
   "copies": 5,
   "available": true
 
+
+}
 ````
