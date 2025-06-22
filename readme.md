@@ -18,15 +18,15 @@ cd library-management-api
 npm install
 ```
 
-### Details of API
+Details of API
 
 🚀 Base URL (Deployed on Vercel)
 
-## Link:https://library-management-api-five-lyart.vercel.app/
+Link:https://library-management-api-five-lyart.vercel.app/
 
-## Details of evey api
+Details of evey api
 
-### GET (/api/books)
+GET (/api/books)
 
 2. Get All Books
    GET /api/books
@@ -43,7 +43,6 @@ limit (number) - Limit number of results
 
 Example Response:
 
-````json
 {
 "success": true,
 "message": "Books retrieved successfully",
@@ -64,26 +63,19 @@ Example Response:
 ]
 }
 
-
-
-
 ### POST (/api/books)
 
 in this a post method can add a book in the database with all books details like title,author,genre,isbn,description,copies,available.
 
 and response will look like this
 
-
-```json
 {
-  "title": "The everythings we know",
-  "author": "Stephen Hawking",
-  "genre": "SCIENCE",
-  "isbn": "9780553380163",
-  "description": "An overview of cosmology and black holes.",
-  "copies": 5,
-  "available": true
-
+"title": "The everythings we know",
+"author": "Stephen Hawking",
+"genre": "SCIENCE",
+"isbn": "9780553380163",
+"description": "An overview of cosmology and black holes.",
+"copies": 5,
+"available": true
 
 }
-````
