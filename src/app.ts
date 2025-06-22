@@ -7,7 +7,9 @@ app.use(express.json());
 app.use("/api", booksRoutes);
 
 app.get("/", (req: Request, res: Response) => {
-  console.log("hellow this is lybrary management api");
+  res.json({
+    message: "this is library management api",
+  });
 });
 
 export default app;

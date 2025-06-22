@@ -34,6 +34,7 @@ booksRoutes.get("/books", async (req: Request, res: Response) => {
   const filter = req.query.filter as string;
   const sortBy = req.query.sortBy as "asc" | "desc";
   const limit = parseInt(req.query.limit as string);
+  console.log(filter);
   const querydata: any = {};
   if (filter) {
     querydata.genre = filter;
