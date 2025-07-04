@@ -30,31 +30,50 @@ const createBooksZodSchema = zod_1.z.object({
 });
 /* Create a New Book */
 exports.booksRoutes.post("/books", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const body = req.body;
+        // Zod validation
         const zodvalidation = yield createBooksZodSchema.parseAsync(body);
+        // Create book
         const books = yield books_model_1.Books.create(zodvalidation);
         res.status(201).json({
             success: true,
-            message: "Books created successfully",
+            message: "Book created successfully",
             data: books,
         });
     }
     catch (error) {
-        if (error.name === "ValidationError") {
-            res.status(400).json({
-                message: "Validation failed",
+        // Mongoose duplicate key error handling
+        if (error.code === 11000 && ((_a = error.keyPattern) === null || _a === void 0 ? void 0 : _a.isbn)) {
+            res.status(409).json({
                 success: false,
-                error: error,
+                message: "A book with this ISBN already exists.",
+                field: "isbn",
             });
         }
-        else {
-            res.status(500).json({
-                message: "Something went wrong",
+        // Mongoose validation error
+        if (error.name === "ValidationError") {
+            res.status(400).json({
                 success: false,
+                message: "Validation failed",
+                error: error.message,
+            });
+        }
+        // Zod validation error
+        if (error instanceof zod_1.ZodError) {
+            res.status(400).json({
+                success: false,
+                message: "Invalid input",
                 error: error.errors,
             });
         }
+        // Catch-all
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
     }
 }));
 /* Get all books by  sorting,filtering and limit */

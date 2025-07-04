@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { Books } from "../Models/books.model";
 import { BorrowBookslist } from "../Models/borrow.model";
-import { z } from "zod";
+import { z, ZodError } from "zod";
 export const booksRoutes = express.Router();
 
 
@@ -22,29 +22,60 @@ const createBooksZodSchema = z.object({
 booksRoutes.post("/books", async (req: Request, res: Response) => {
   try {
     const body = req.body;
-    const zodvalidation = await createBooksZodSchema.parseAsync(body)
+
+    // Zod validation
+    const zodvalidation = await createBooksZodSchema.parseAsync(body);
+
+    // Create book
     const books = await Books.create(zodvalidation);
+
     res.status(201).json({
       success: true,
-      message: "Books created successfully",
+      message: "Book created successfully",
       data: books,
     });
+
   } catch (error: any) {
+
+    // Mongoose duplicate key error handling
+    if (error.code === 11000 && error.keyPattern?.isbn) {
+       res.status(409).json({
+        success: false,
+        message: "A book with this ISBN already exists.",
+        field: "isbn",
+      });
+    }
+
+    // Mongoose validation error
     if (error.name === "ValidationError") {
       res.status(400).json({
+        success: false,
         message: "Validation failed",
-        success: false,
-        error: error,
+        error: error.message,
       });
-    } else {
-      res.status(500).json({
-        message: "Something went wrong",
+    }
+
+    // Zod validation error
+    if (error instanceof ZodError) {
+      res.status(400).json({
         success: false,
+        message: "Invalid input",
         error: error.errors,
       });
     }
+
+    // Catch-all
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 });
+
+
+
+
 /* Get all books by  sorting,filtering and limit */
 booksRoutes.get("/books", async (req: Request, res: Response) => {
   const filter = req.query.filter as string;
